@@ -19,6 +19,7 @@ function [RGB,darkChannel,t,J] = dehaze(RGB,t0,w)
         pic = RGBD(:,:,i);
         A(i) = max(pic(dark_bright));
     end
+    % A
     %% t(x)
     tR = double(R)./double(A(1));
     tG = double(G)./double(A(2));
