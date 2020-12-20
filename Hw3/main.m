@@ -2,19 +2,17 @@ clear;
 close all;
 clc;
 
-%Img=imread('three.bmp');    
-Img=imread('vessel.bmp');    
-%Img=imread('twoCells.bmp');  
+[f,p] = uigetfile({'*.bmp'},'Open');
+if f
+    Img = imread([p f]); 
+end
+
+% Img=imread('three.bmp');    
+% Img=imread('vessel.bmp');    
+% Img=imread('twoCells.bmp');  
 U = Img(:,:,1);
 
-% get the size
-[nrow, ncol] = size(U);
-
-c0 = 3;
-initialLSF = c0 * ones(size(U));
-roi = 6;
-initialLSF(roi : nrow - roi, roi : ncol - roi) = -c0;  
-phi_0 = initialLSF;
+[phi_0, kk] = initial(f,U);
 
 delta_t = 5;
 mu = 0.2 / delta_t; % 0.04
@@ -34,7 +32,7 @@ hold on;
 plotLevelSet(phi,0,'r');
 
 numIter = 1;
-for k = 1 : 100 
+for k = 1 : kk 
     phi = evolution_cv(I, phi, g, gx, gy, mu, nu, lambda, delta_t, epsilon, numIter);    % update level set function
     if mod(k,2)==0
         pause(.5);
